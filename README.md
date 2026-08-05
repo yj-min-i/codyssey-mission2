@@ -79,13 +79,18 @@ codyssey-mission2/
 | `quizzes[].answer` | int | 정답 번호 (1~4) |
 | `best_score` | int | 100점 만점 기준 최고 점수 |
 
-## 7. 실행 화면
+## 7. 개발 환경
+![개발 환경](docs/screenshots/env.png)
+
+## 8. 실행 화면
 ![메뉴](docs/screenshots/menu.png)
 ![퀴즈 풀기](docs/screenshots/play.png)
 ![퀴즈 추가](docs/screenshots/add_quiz.png)
 ![점수 확인](docs/screenshots/score.png)
 
-## 8. Git 활용 기록
+## 9. Git 활용 기록
 - `init`, `add`, `commit`, `push`, `pull`, `checkout`, `clone` 사용
 - `feature/play-quiz` 브랜치 생성 후 main으로 병합(`merge --no-ff`)
 - 기능 단위로 10개 이상의 커밋 작성
+
+![Git 로그](docs/screenshots/git_log.png)
