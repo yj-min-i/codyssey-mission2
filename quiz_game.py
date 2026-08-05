@@ -128,7 +128,8 @@ class QuizGame:
             elif choice == 4:
                 self.show_score()
             elif choice == 5:
-                print("\n프로그램을 종료합니다.")
+                self.save()
+                print("\n💾 저장을 완료했습니다. 프로그램을 종료합니다.")
                 break
     # ---------- 기능: 퀴즈 풀기 ----------
     def play_quiz(self):
@@ -167,6 +168,7 @@ class QuizGame:
         else:
             print(f"현재 최고 점수는 {self.best_score}점입니다.")
         print("=" * 40)
+        self.save()
     # ---------- 기능: 퀴즈 추가 ----------
     def add_quiz(self):
         """사용자로부터 새 문제를 입력받아 목록에 추가한다."""
@@ -181,6 +183,7 @@ class QuizGame:
         answer = self.ask_number("정답 번호 (1-4): ", 1, 4)
 
         self.quizzes.append(Quiz(question, choices, answer))
+        self.save()
         print("✅ 퀴즈가 추가되었습니다!")
     # ---------- 기능: 퀴즈 목록 ----------
     def show_quiz_list(self):
@@ -203,3 +206,38 @@ class QuizGame:
             return
 
         print(f"\n🏆 최고 점수: {self.best_score}점")
+    # ---------- 파일 저장 / 불러오기 ----------
+    def save(self):
+        """퀴즈 목록과 최고 점수를 state.json에 저장한다."""
+        data = {
+            "quizzes": [quiz.to_dict() for quiz in self.quizzes],
+            "best_score": self.best_score,
+        }
+        try:
+            with open(STATE_FILE, "w", encoding="utf-8") as file:
+                json.dump(data, file, ensure_ascii=False, indent=2)
+        except OSError as error:
+            print(f"⚠️  저장에 실패했습니다: {error}")
+
+    def load(self):
+        """state.json에서 데이터를 불러온다. 없거나 손상되면 기본 데이터를 사용한다."""
+        if not os.path.exists(STATE_FILE):            # 첫 실행: 파일이 없음
+            print("📂 저장된 데이터가 없어 기본 퀴즈로 시작합니다.")
+            self.use_default_data()
+            return
+
+        try:
+            with open(STATE_FILE, "r", encoding="utf-8") as file:
+                data = json.load(file)
+
+            self.quizzes = [Quiz.from_dict(item) for item in data["quizzes"]]
+            self.best_score = int(data["best_score"])
+
+            print(f"📂 저장된 데이터를 불러왔습니다. "
+                  f"(퀴즈 {len(self.quizzes)}개, 최고 점수 {self.best_score}점)")
+
+        except (json.JSONDecodeError, KeyError, TypeError, ValueError, OSError) as error:
+            # 파일이 깨졌거나 형식이 다른 경우 → 안내 후 기본 데이터로 복구
+            print(f"⚠️  데이터 파일을 읽을 수 없습니다({type(error).__name__}). "
+                  f"기본 퀴즈로 초기화합니다.")
+            self.use_default_data()

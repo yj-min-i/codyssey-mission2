@@ -4,15 +4,16 @@ from quiz_game import QuizGame
 
 
 def main():
-    """게임 객체를 만들고 실행한다."""
+    """게임 객체를 만들고, 저장된 데이터를 불러온 뒤 실행한다."""
     game = QuizGame()
-    game.use_default_data()      # ← 임시로 기본 데이터 사용 (단계 7에서 load()로 교체)
+    game.load()
 
     try:
         game.run()
     except (KeyboardInterrupt, EOFError):
-        # Ctrl+C 또는 입력 스트림 종료 시에도 비정상 종료처럼 보이지 않게 처리
-        print("\n\n⚠️  입력이 중단되었습니다. 안전하게 종료합니다.")
+        # Ctrl+C(KeyboardInterrupt) 또는 입력 종료(EOFError)에도 비정상 종료하지 않는다
+        print("\n\n⚠️  입력이 중단되었습니다. 저장 후 안전하게 종료합니다.")
+        game.save()
 
     print("👋 이용해 주셔서 감사합니다.")
 
