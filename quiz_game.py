@@ -1,5 +1,59 @@
 """퀴즈 게임 전체를 관리하는 모듈."""
 
+import json
+import os
+import random
+
+from quiz import Quiz
+
+# 데이터 파일은 이 소스 파일이 있는 프로젝트 루트에 둔다.
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+STATE_FILE = os.path.join(BASE_DIR, "state.json")
+
+# 파일이 없을 때(첫 실행) 사용할 기본 퀴즈 8문항 — 주제: 간식·디저트·카페 메뉴 상식
+DEFAULT_QUIZZES = [
+    {
+        "question": "초콜릿의 원료가 되는 열매는 무엇일까?",
+        "choices": ["카카오", "커피", "바닐라", "아몬드"],
+        "answer": 1,
+    },
+    {
+        "question": "화이트초콜릿에 들어가지 않는 성분은?",
+        "choices": ["설탕", "우유", "카카오버터", "코코아 고형분(카카오매스)"],
+        "answer": 4,
+    },
+    {
+        "question": "에스프레소에 뜨거운 물을 섞어 만드는 카페 메뉴는?",
+        "choices": ["아메리카노", "카페라떼", "카푸치노", "콜드브루"],
+        "answer": 1,
+    },
+    {
+        "question": "카페라떼와 카푸치노의 가장 큰 차이는?",
+        "choices": ["원두의 종류", "우유 거품(폼)의 양", "컵의 재질", "물의 온도"],
+        "answer": 2,
+    },
+    {
+        "question": "마카롱 반죽에 들어가는 대표적인 가루는?",
+        "choices": ["아몬드 가루", "감자 전분", "옥수수 가루", "쌀가루"],
+        "answer": 1,
+    },
+    {
+        "question": "티라미수에 들어가는 이탈리아 치즈는?",
+        "choices": ["체다", "모차렐라", "마스카르포네", "고르곤졸라"],
+        "answer": 3,
+    },
+    {
+        "question": "버블티의 '버블(펄)'을 만드는 주재료는?",
+        "choices": ["젤라틴", "타피오카 전분", "찹쌀", "한천"],
+        "answer": 2,
+    },
+    {
+        "question": "겨울 간식 붕어빵에 전통적으로 들어가는 속은?",
+        "choices": ["팥", "고구마", "크림", "치즈"],
+        "answer": 1,
+    },
+]
+
 
 class QuizGame:
     """메뉴 출력, 사용자 입력 처리, 게임 진행을 담당하는 클래스."""
@@ -7,6 +61,11 @@ class QuizGame:
     def __init__(self):
         self.quizzes = []      # Quiz 객체를 담을 리스트
         self.best_score = 0    # 최고 점수
+
+    def use_default_data(self):
+        """기본 퀴즈 데이터로 초기화한다."""
+        self.quizzes = [Quiz.from_dict(item) for item in DEFAULT_QUIZZES]
+        self.best_score = 0
 
     # ---------- 입력 처리 ----------
     def ask_number(self, prompt, min_value, max_value):

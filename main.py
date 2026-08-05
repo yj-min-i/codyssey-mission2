@@ -6,6 +6,7 @@ from quiz_game import QuizGame
 def main():
     """게임 객체를 만들고 실행한다."""
     game = QuizGame()
+    game.use_default_data()      # ← 임시로 기본 데이터 사용 (단계 7에서 load()로 교체)
 
     try:
         game.run()
