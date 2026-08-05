@@ -120,7 +120,7 @@ class QuizGame:
             choice = self.ask_number("선택: ", 1, 5)
 
             if choice == 1:
-                print("\n[퀴즈 풀기] 아직 구현 중입니다.")
+                self.play_quiz()
             elif choice == 2:
                 print("\n[퀴즈 추가] 아직 구현 중입니다.")
             elif choice == 3:
@@ -130,3 +130,40 @@ class QuizGame:
             elif choice == 5:
                 print("\n프로그램을 종료합니다.")
                 break
+    # ---------- 기능: 퀴즈 풀기 ----------
+    def play_quiz(self):
+        """저장된 퀴즈를 출제하고 채점한 뒤 최고 점수를 갱신한다."""
+        if not self.quizzes:                      # 퀴즈가 없는 경우 처리
+            print("\n⚠️  등록된 퀴즈가 없습니다. 먼저 '2. 퀴즈 추가'로 문제를 등록해 주세요.")
+            return
+
+        total = len(self.quizzes)
+        count = self.ask_number(f"\n몇 문제를 풀까요? (1~{total}): ", 1, total)
+        selected = random.sample(self.quizzes, count)   # 순서를 랜덤하게 섞어서 뽑기
+
+        print(f"\n📝 퀴즈를 시작합니다! (총 {count}문제)")
+        correct_count = 0
+
+        for number, quiz in enumerate(selected, start=1):
+            quiz.show(number)
+            user_answer = self.ask_number("정답 입력 (1-4): ", 1, 4)
+
+            if quiz.is_correct(user_answer):
+                print("✅ 정답입니다!")
+                correct_count += 1
+            else:
+                right = quiz.choices[quiz.answer - 1]
+                print(f"❌ 오답입니다. 정답은 {quiz.answer}번({right})입니다.")
+
+        score = round(correct_count / count * 100)      # 100점 만점 환산
+
+        print()
+        print("=" * 40)
+        print(f"🏆 결과: {count}문제 중 {correct_count}문제 정답! ({score}점)")
+
+        if score > self.best_score:
+            self.best_score = score
+            print("🎉 새로운 최고 점수입니다!")
+        else:
+            print(f"현재 최고 점수는 {self.best_score}점입니다.")
+        print("=" * 40)
