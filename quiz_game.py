@@ -122,7 +122,7 @@ class QuizGame:
             if choice == 1:
                 self.play_quiz()
             elif choice == 2:
-                print("\n[퀴즈 추가] 아직 구현 중입니다.")
+                self.add_quiz()
             elif choice == 3:
                 print("\n[퀴즈 목록] 아직 구현 중입니다.")
             elif choice == 4:
@@ -167,3 +167,18 @@ class QuizGame:
         else:
             print(f"현재 최고 점수는 {self.best_score}점입니다.")
         print("=" * 40)
+    # ---------- 기능: 퀴즈 추가 ----------
+    def add_quiz(self):
+        """사용자로부터 새 문제를 입력받아 목록에 추가한다."""
+        print("\n📌 새로운 퀴즈를 추가합니다.")
+
+        question = self.ask_text("문제를 입력하세요: ")
+
+        choices = []
+        for number in range(1, 5):                     # 선택지는 4개
+            choices.append(self.ask_text(f"선택지 {number}: "))
+
+        answer = self.ask_number("정답 번호 (1-4): ", 1, 4)
+
+        self.quizzes.append(Quiz(question, choices, answer))
+        print("✅ 퀴즈가 추가되었습니다!")
