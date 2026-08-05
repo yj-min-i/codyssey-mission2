@@ -124,9 +124,9 @@ class QuizGame:
             elif choice == 2:
                 self.add_quiz()
             elif choice == 3:
-                print("\n[퀴즈 목록] 아직 구현 중입니다.")
+                self.show_quiz_list()
             elif choice == 4:
-                print("\n[점수 확인] 아직 구현 중입니다.")
+                self.show_score()
             elif choice == 5:
                 print("\n프로그램을 종료합니다.")
                 break
@@ -182,3 +182,24 @@ class QuizGame:
 
         self.quizzes.append(Quiz(question, choices, answer))
         print("✅ 퀴즈가 추가되었습니다!")
+    # ---------- 기능: 퀴즈 목록 ----------
+    def show_quiz_list(self):
+        """등록된 퀴즈 목록을 출력한다."""
+        if not self.quizzes:                       # 퀴즈가 없는 경우 처리
+            print("\n⚠️  등록된 퀴즈가 없습니다.")
+            return
+
+        print(f"\n📋 등록된 퀴즈 목록 (총 {len(self.quizzes)}개)")
+        print("-" * 40)
+        for number, quiz in enumerate(self.quizzes, start=1):
+            print(f"[{number}] {quiz.question}")
+        print("-" * 40)
+
+    # ---------- 기능: 점수 확인 ----------
+    def show_score(self):
+        """최고 점수를 출력한다."""
+        if self.best_score == 0:                   # 아직 퀴즈를 풀지 않은 경우 처리
+            print("\n📊 아직 퀴즈를 풀지 않았습니다. 먼저 퀴즈를 풀어 보세요!")
+            return
+
+        print(f"\n🏆 최고 점수: {self.best_score}점")
